@@ -1,11 +1,199 @@
 .footer {
-    background: var(--bg-secondary);
-    padding: 3rem 0;
-    text-align: center;
-    border-top: 1px solid var(--card-border);
-    margin-top: 6rem;
+    position: relative;
+    padding: 4rem 2rem 2rem;
+    background: rgba(8, 10, 20, 0.9);
+    z-index: 1;
 }
 
-.footer p {
+.footerAccent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-purple), transparent);
+    opacity: 0.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Grid */
+.footerGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+/* Brand */
+.footerBrand {
+    max-width: 350px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.logoIcon {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.logoText {
+    background: linear-gradient(135deg, #fff, var(--accent-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brandDesc {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+/* Social Links */
+.socialLinks {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.socialLink {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 212, 255, 0.06);
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    border-radius: 10px;
     color: var(--text-secondary);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.socialLink:hover {
+    color: var(--accent-cyan);
+    border-color: rgba(0, 212, 255, 0.3);
+    background: rgba(0, 212, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.15);
+}
+
+/* Footer Sections */
+.footerSection {}
+
+.footerHeading {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 1.2rem;
+}
+
+.footerLinks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.footerLink {
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.footerLink:hover {
+    color: var(--accent-cyan);
+    padding-left: 5px;
+}
+
+.footerInfo {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+}
+
+/* Bottom */
+.footerBottom {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 212, 255, 0.06);
+    text-align: center;
+}
+
+.copyright {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+}
+
+.heart {
+    display: inline-block;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* Back to Top */
+.backToTop {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 14, 26, 0.9);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    color: var(--accent-cyan);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 999;
+    backdrop-filter: blur(10px);
+}
+
+.showBtn {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.backToTop:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footerGrid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footerBrand {
+        max-width: 100%;
+    }
 }

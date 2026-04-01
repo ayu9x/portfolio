@@ -4,48 +4,57 @@ import { useEffect, useRef } from 'react'
 
 export default function ParticleBackground() {
     const canvasRef = useRef(null)
+    const mouseRef = useRef({ x: -1000, y: -1000 })
+    const animationRef = useRef(null)
 
     useEffect(() => {
         const canvas = canvasRef.current
         if (!canvas) return
 
         const ctx = canvas.getContext('2d')
-        canvas.width = window.innerWidth
-        canvas.height = window.innerHeight
 
+        const resize = () => {
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+        }
+        resize()
+
+        // Reduced particle count for smooth performance
         const particlesArray = []
-        const numberOfParticles = 100
+        const numberOfParticles = Math.min(40, Math.floor(window.innerWidth / 40))
 
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width
                 this.y = Math.random() * canvas.height
-                this.size = Math.random() * 3 + 1
-                this.speedX = Math.random() * 1 - 0.5
-                this.speedY = Math.random() * 1 - 0.5
-                this.opacity = Math.random() * 0.5 + 0.2
+                this.size = Math.random() * 1.5 + 0.5
+                this.speedX = (Math.random() - 0.5) * 0.3
+                this.speedY = (Math.random() - 0.5) * 0.3
+                this.opacity = Math.random() * 0.3 + 0.1
+                this.hue = Math.random() > 0.5 ? 190 : 270
             }
 
             update() {
                 this.x += this.speedX
                 this.y += this.speedY
 
-                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX
-                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY
+                // Wrap around edges
+                if (this.x > canvas.width) this.x = 0
+                else if (this.x < 0) this.x = canvas.width
+                if (this.y > canvas.height) this.y = 0
+                else if (this.y < 0) this.y = canvas.height
             }
 
             draw() {
-                ctx.fillStyle = `rgba(14, 165, 233, ${this.opacity})`
+                ctx.fillStyle = `hsla(${this.hue}, 80%, 60%, ${this.opacity})`
                 ctx.beginPath()
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
                 ctx.fill()
             }
         }
 
-        function init() {
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle())
-            }
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle())
         }
 
         function animate() {
@@ -55,15 +64,17 @@ export default function ParticleBackground() {
                 particlesArray[i].update()
                 particlesArray[i].draw()
 
-                for (let j = i; j < particlesArray.length; j++) {
+                // Only check nearby particles (reduced connection distance)
+                for (let j = i + 1; j < particlesArray.length; j++) {
                     const dx = particlesArray[i].x - particlesArray[j].x
                     const dy = particlesArray[i].y - particlesArray[j].y
-                    const distance = Math.sqrt(dx * dx + dy * dy)
+                    const distSq = dx * dx + dy * dy
 
-                    if (distance < 150) {
-                        const opacity = (1 - distance / 150) * 0.2
-                        ctx.strokeStyle = `rgba(14, 165, 233, ${opacity})`
-                        ctx.lineWidth = 1
+                    // Use squared distance to avoid expensive sqrt
+                    if (distSq < 14400) { // 120^2
+                        const opacity = (1 - Math.sqrt(distSq) / 120) * 0.08
+                        ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`
+                        ctx.lineWidth = 0.5
                         ctx.beginPath()
                         ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
                         ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
@@ -72,19 +83,18 @@ export default function ParticleBackground() {
                 }
             }
 
-            requestAnimationFrame(animate)
+            animationRef.current = requestAnimationFrame(animate)
         }
 
-        init()
         animate()
 
-        const handleResize = () => {
-            canvas.width = window.innerWidth
-            canvas.height = window.innerHeight
-        }
+        const handleResize = () => resize()
+        window.addEventListener('resize', handleResize, { passive: true })
 
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
+        return () => {
+            if (animationRef.current) cancelAnimationFrame(animationRef.current)
+            window.removeEventListener('resize', handleResize)
+        }
     }, [])
 
     return (
@@ -98,7 +108,7 @@ export default function ParticleBackground() {
                 height: '100%',
                 zIndex: 0,
                 pointerEvents: 'none',
-                opacity: 0.4
+                opacity: 0.5
             }}
         />
     )

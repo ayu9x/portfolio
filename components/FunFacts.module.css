@@ -1,0 +1,141 @@
+.funFacts {
+    padding: 6rem 2rem;
+    position: relative;
+    background: radial-gradient(ellipse at center, rgba(123, 47, 247, 0.05) 0%, transparent 70%);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.sectionTitle {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.gradient {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.factsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+}
+
+.factCard {
+    background: rgba(15, 20, 41, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 20px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.factCard.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.factCard:hover {
+    border-color: rgba(123, 47, 247, 0.4);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 
+                0 0 20px rgba(123, 47, 247, 0.15);
+}
+
+.factScanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: scanVertical 3s linear infinite;
+}
+
+.factCard:hover .factScanline {
+    opacity: 1;
+}
+
+@keyframes scanVertical {
+    0% { top: -4px; }
+    100% { top: 100%; }
+}
+
+.factIcon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.factCard:hover .factIcon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.factNumber {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--accent-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.factLabel {
+    font-size: 0.9rem;
+    font-family: var(--font-mono, monospace);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .factsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .factCard {
+        padding: 1.5rem 1rem;
+    }
+    
+    .factIcon {
+        font-size: 2.2rem;
+    }
+    
+    .factNumber {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .factsGrid {
+        grid-template-columns: 1fr;
+    }
+}

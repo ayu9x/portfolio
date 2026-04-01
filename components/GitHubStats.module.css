@@ -1,0 +1,137 @@
+.github {
+    padding: 6rem 2rem;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.sectionTag, .sectionTagClose {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.85rem;
+    color: var(--accent-cyan);
+    opacity: 0.4;
+    display: block;
+}
+
+.sectionTag { margin-bottom: 0.5rem; }
+.sectionTagClose { margin-top: 3rem; }
+
+.sectionHeader { margin-bottom: 3rem; }
+
+.sectionTitle {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.gradient {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sectionDesc {
+    color: var(--text-tertiary);
+    font-size: 1rem;
+}
+
+/* Stats Grid */
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+}
+
+.statsGrid.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.statCard {
+    background: rgba(15, 20, 41, 0.5);
+    border: 1px solid rgba(0, 212, 255, 0.08);
+    border-radius: 14px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statCard:hover {
+    border-color: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 212, 255, 0.08);
+}
+
+.fullWidth {
+    grid-column: 1 / -1;
+}
+
+.statImage {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+/* Contribution Card */
+.contributionCard {
+    background: rgba(15, 20, 41, 0.5);
+    border: 1px solid rgba(0, 212, 255, 0.08);
+    border-radius: 14px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    overflow-x: auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease 0.2s;
+}
+
+.contributionCard.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.contributionCard:hover {
+    border-color: rgba(0, 212, 255, 0.2);
+}
+
+.contributionImage {
+    width: 100%;
+    height: auto;
+    filter: opacity(0.85);
+}
+
+/* Profile Link */
+.profileLink {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .statImage {
+        max-width: 100%;
+    }
+
+    .contributionCard {
+        padding: 1rem;
+    }
+}

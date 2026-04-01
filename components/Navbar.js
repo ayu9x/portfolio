@@ -1,33 +1,34 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTheme } from 'next-themes'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
-    const [isDark, setIsDark] = useState(false)
+    const [scrolled, setScrolled] = useState(false)
+    const [activeSection, setActiveSection] = useState('home')
+    const { theme, setTheme } = useTheme()
+    const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
-        // Check for saved theme preference
-        const savedTheme = localStorage.getItem('theme')
-        if (savedTheme === 'dark') {
-            setIsDark(true)
-            document.documentElement.setAttribute('data-theme', 'dark')
+        setMounted(true)
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50)
+
+            const sections = ['home', 'about', 'services', 'skills', 'experience', 'projects', 'github', 'contact']
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const el = document.getElementById(sections[i])
+                if (el && window.scrollY >= el.offsetTop - 200) {
+                    setActiveSection(sections[i])
+                    break
+                }
+            }
         }
+
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
     }, [])
-
-    const toggleTheme = () => {
-        const newTheme = !isDark
-        setIsDark(newTheme)
-
-        if (newTheme) {
-            document.documentElement.setAttribute('data-theme', 'dark')
-            localStorage.setItem('theme', 'dark')
-        } else {
-            document.documentElement.removeAttribute('data-theme')
-            localStorage.setItem('theme', 'light')
-        }
-    }
 
     const scrollToSection = (id) => {
         const element = document.getElementById(id)
@@ -37,33 +38,67 @@ export default function Navbar() {
         }
     }
 
+    const navItems = [
+        { id: 'home', label: 'Home' },
+        { id: 'about', label: 'About' },
+        { id: 'skills', label: 'Skills' },
+        { id: 'experience', label: 'Experience' },
+        { id: 'projects', label: 'Projects' },
+        { id: 'contact', label: 'Contact' },
+    ]
+
     return (
-        <nav className={styles.navbar}>
-            <div className="container">
-                <div className={styles.navContainer}>
-                    <div className={styles.logo}>AYUSH RAJ</div>
+        <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
+            <div className={styles.navContainer}>
+                <div className={styles.logo} onClick={() => scrollToSection('home')}>
+                    <span className={styles.logoIcon}>⟨/⟩</span>
+                    <span className={styles.logoText}>AYUSH</span>
+                    <span className={styles.logoDot}>_</span>
+                </div>
 
-                    <ul className={`${styles.navMenu} ${isOpen ? styles.active : ''}`}>
-                        <li><a onClick={() => scrollToSection('home')} className={styles.navLink}>Home</a></li>
-                        <li><a onClick={() => scrollToSection('skills')} className={styles.navLink}>Skills</a></li>
-                        <li><a onClick={() => scrollToSection('experience')} className={styles.navLink}>Experience</a></li>
-                        <li><a onClick={() => scrollToSection('projects')} className={styles.navLink}>Projects</a></li>
-                        <li><a onClick={() => scrollToSection('contact')} className={styles.navLink}>Contact</a></li>
-                    </ul>
+                <ul className={`${styles.navMenu} ${isOpen ? styles.active : ''}`}>
+                    {navItems.map((item) => (
+                        <li key={item.id}>
+                            <a
+                                onClick={() => scrollToSection(item.id)}
+                                className={`${styles.navLink} ${activeSection === item.id ? styles.activeLink : ''}`}
+                            >
+                                {item.label}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
 
-                    <div className={styles.navRight}>
+                <div className={styles.navRight}>
+                    {mounted && (
                         <button
-                            onClick={toggleTheme}
-                            className={`${styles.themeToggle} ${isDark ? styles.active : ''}`}
-                            aria-label="Toggle theme"
+                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                            className={styles.themeToggle}
+                            aria-label="Toggle Dark Mode"
                         >
+                            {theme === 'dark' ? (
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                            ) : (
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                            )}
                         </button>
+                    )}
 
-                        <div className={styles.hamburger} onClick={() => setIsOpen(!isOpen)}>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
+                    <a onClick={() => scrollToSection('contact')} className={styles.cvButton}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                        Hire Me
+                    </a>
+
+                    <div
+                        className={`${styles.hamburger} ${isOpen ? styles.hamburgerOpen : ''}`}
+                        onClick={() => setIsOpen(!isOpen)}
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
                 </div>
             </div>
